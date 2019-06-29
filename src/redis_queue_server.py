@@ -1,0 +1,24 @@
+# redis server queue
+
+import os
+import logging
+import multiprocessing
+from tasks import get_word_counts
+from redis_queue_worker import worker
+
+PROCESSES = 4
+
+def run():
+    """ spawns 4 worker procs"""
+    processes = []
+    print(f'Running with {PROCESSES} processes')
+    while True:
+        for w in range(PROCESSES):
+            p = multiprocessing.Process(target=worker)
+            processes.append(p)
+            p.start()
+        for p in processes:
+            p.join()
+
+if __name__ == '__main__':
+    run()
